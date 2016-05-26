@@ -65,6 +65,7 @@ rake geonames_dump:import:cities5000        # Import cities with population grea
 rake geonames_dump:import:countries         # Import countries informations
 rake geonames_dump:import:features          # Import feature data.
 rake geonames_dump:import:alternate_names   # Import alternate names
+rake geonames_dump:import:hierarchy         # Import alternate names
 
 rake geonames_dump:truncate:all             # Truncate all geonames data.
 rake geonames_dump:truncate:countries       # Truncate countries informations
