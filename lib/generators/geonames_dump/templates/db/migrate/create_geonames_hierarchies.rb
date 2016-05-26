@@ -4,7 +4,7 @@ class CreateGeonamesHierarchies < ActiveRecord::Migration
     create_table :geonames_hierarchies do |t|
       t.integer :parentId
       t.integer :childId
-      t.string :type
+      t.string :geo_type
       t.timestamps
     end
   end

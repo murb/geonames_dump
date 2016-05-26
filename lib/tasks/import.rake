@@ -24,7 +24,7 @@ namespace :geonames_dump do
     ]
     GEONAMES_ADMINS_COL_NAME = [:code, :name, :asciiname, :geonameid]
 
-    GEONAMES_HIERARCHY = [:parentId, :childId, :type]
+    GEONAMES_HIERARCHY = [:parentId, :childId, :geo_type]
 
     desc 'Prepare everything to import data'
     task :prepare do
