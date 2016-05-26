@@ -12,17 +12,19 @@ namespace :geonames_dump do
         :feature_class, :feature_code, :country_code, :cc2, :admin1_code,
         :admin2_code, :admin3_code, :admin4_code, :population, :elevation,
         :dem, :timezone, :modification
-      ]
+    ]
     GEONAMES_ALTERNATE_NAMES_COL_NAME = [
         :alternate_name_id, :geonameid, :isolanguage, :alternate_name,
         :is_preferred_name, :is_short_name, :is_colloquial, :is_historic
-      ]
+    ]
     GEONAMES_COUNTRIES_COL_NAME = [
         :iso, :iso3, :iso_numeric, :fips, :country, :capital, :area, :population, :continent,
         :tld, :currency_code, :currency_name, :phone, :postal_code_format, :postal_code_regex,
         :languages, :geonameid, :neighbours, :equivalent_fips_code
-      ]
-    GEONAMES_ADMINS_COL_NAME = [ :code, :name, :asciiname, :geonameid ]
+    ]
+    GEONAMES_ADMINS_COL_NAME = [:code, :name, :asciiname, :geonameid]
+
+    GEONAMES_HIERARCHY = [:parentId, :childId, :type]
 
     desc 'Prepare everything to import data'
     task :prepare do
@@ -139,6 +141,14 @@ namespace :geonames_dump do
       end
     end
 
+    desc 'Import hierarchy'
+    task :hierarchy => [:prepare, :environment] do
+      txt_file = get_or_download('http://download.geonames.org/export/dump/hierarchy.zip', txt_file: 'hierarchy.txt')
+      File.open(txt_file) do |f|
+        insert_data(f, GEONAMES_HIERARCHY, GeonamesHierarchy, :title => "hierarchy")
+      end
+    end
+
     private
 
     def disable_logger
@@ -195,7 +205,7 @@ namespace :geonames_dump do
       puts "Fetching #{url}"
       url = URI.parse(url)
       req = Net::HTTP::Get.new(url.path)
-      res = Net::HTTP.start(url.host, url.port) {|http| http.request(req)}
+      res = Net::HTTP.start(url.host, url.port) { |http| http.request(req) }
       return res.body
     end
 
@@ -280,7 +290,7 @@ namespace :geonames_dump do
     #  no filter keys apply.
     #  all applicable filter keys include the filter value.
     def filter?(attributes)
-      return attributes.keys.all?{|key| filter_keyvalue?(key, attributes[key])}
+      return attributes.keys.all? { |key| filter_keyvalue?(key, attributes[key]) }
     end
 
     def filter_keyvalue?(col, col_value)
