@@ -1,5 +1,5 @@
 class GeonamesFeature < ActiveRecord::Base
-  validates_uniqueness_of :geonameid
+  #validates_uniqueness_of :geonameid
   before_save :set_asciiname_first_letters
 
   has_many :geonames_alternate_names,
