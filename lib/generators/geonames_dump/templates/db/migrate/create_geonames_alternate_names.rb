@@ -26,7 +26,7 @@ class CreateGeonamesAlternateNames < ActiveRecord::Migration
 
     add_index :geonames_alternate_names, :alternate_name_id
     add_index :geonames_alternate_names, :geonameid
-    add_index :geonames_alternate_names, :isolanguage
-    add_index :geonames_alternate_names, :alternate_name_first_letters
+    add_index :geonames_alternate_names, :isolanguage, length: 7
+    add_index :geonames_alternate_names, :alternate_name_first_letters, length: 3
   end
 end
