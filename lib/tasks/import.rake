@@ -22,7 +22,7 @@ namespace :geonames_dump do
         :tld, :currency_code, :currency_name, :phone, :postal_code_format, :postal_code_regex,
         :languages, :geonameid, :neighbours, :equivalent_fips_code
       ]
-    GEONAMES_ADMINS_COL_NAME = [ :code, :name, :asciiname, :geonameid ]
+    GEONAMES_ADMINS_COL_NAME = [ :code, :name, :asciiname, :id ]
 
     desc 'Prepare everything to import data'
     task :prepare do
@@ -50,7 +50,7 @@ namespace :geonames_dump do
       # Import into the database.
       File.open(txt_file) do |f|
         # TODO: add feature selection
-        insert_data(f, GEONAMES_FEATURES_COL_NAME, GeonamesCity, :title => "Features")
+        insert_data(f, GEONAMES_FEATURES_COL_NAME, GeonamesCity, :title => "Features", primary_key: :id)
       end
     end
 
@@ -62,7 +62,7 @@ namespace :geonames_dump do
         txt_file = get_or_download("http://download.geonames.org/export/dump/cities#{population}.zip")
 
         File.open(txt_file) do |f|
-          insert_data(f, GEONAMES_FEATURES_COL_NAME, GeonamesCity, :title => "cities of #{population}")
+          insert_data(f, GEONAMES_FEATURES_COL_NAME, GeonamesCity, :title => "cities of #{population}", primary_key: :id)
         end
       end
     end
@@ -106,7 +106,7 @@ namespace :geonames_dump do
       txt_file = get_or_download('http://download.geonames.org/export/dump/admin1CodesASCII.txt')
 
       File.open(txt_file) do |f|
-        insert_data(f, GEONAMES_ADMINS_COL_NAME, GeonamesAdmin1, :title => "Admin1 subdivisions") do |klass, attributes, col_value, idx|
+        insert_data(f, GEONAMES_ADMINS_COL_NAME, GeonamesAdmin1, :title => "Admin1 subdivisions", primary_key: :id) do |klass, attributes, col_value, idx|
           col_value.gsub!('(general)', '')
           col_value.strip!
           if idx == 0
@@ -125,7 +125,7 @@ namespace :geonames_dump do
       txt_file = get_or_download('http://download.geonames.org/export/dump/admin2Codes.txt')
 
       File.open(txt_file) do |f|
-        insert_data(f, GEONAMES_ADMINS_COL_NAME, GeonamesAdmin2, :title => "Admin2 subdivisions") do |klass, attributes, col_value, idx|
+        insert_data(f, GEONAMES_ADMINS_COL_NAME, GeonamesAdmin2, :title => "Admin2 subdivisions", primary_key: :id) do |klass, attributes, col_value, idx|
           col_value.gsub!('(general)', '')
           if idx == 0
             country, admin1, admin2 = col_value.split('.')
