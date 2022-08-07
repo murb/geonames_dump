@@ -249,7 +249,7 @@ namespace :geonames_dump do
                 where_condition[key] = attributes[key]
               end
               object = klass.where(where_condition).first_or_initialize
-              object.update_attributes(attributes)
+              object.update(attributes)
               object.save if object.new_record? || object.changed?
             end
           else
