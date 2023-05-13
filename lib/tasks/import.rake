@@ -35,7 +35,7 @@ namespace :geonames do
     desc 'Prepare everything to import data'
     task :prepare do
       Dir::mkdir(CACHE_DIR) rescue nil
-      FileUtils.mkdir_p File.join(CACHE_DIR, 'alternateNames')
+      FileUtils.mkdir_p File.join(CACHE_DIR, 'alternatenames')
 
       disable_logger
       disable_validations if ENV['SKIP_VALIDATION']
@@ -171,7 +171,7 @@ namespace :geonames do
 
     def get_or_download(url, options = {})
       filename = File.basename(url)
-      cache_dir = url.match(/alternatenames/) ? CACHE_DIR : File.join(CACHE_DIR, 'alternateNames')
+      cache_dir = url.match(/alternatenames/) ? CACHE_DIR : File.join(CACHE_DIR, 'alternatenames')
       unzip = File.extname(filename) == '.zip'
       txt_filename = unzip ? "#{File.basename(filename, '.zip')}.txt" : filename
       txt_file_in_cache = File.join(cache_dir, options[:txt_file] || txt_filename)
