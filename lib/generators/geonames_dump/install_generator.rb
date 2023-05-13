@@ -25,7 +25,7 @@ DESC
       def copy_models_files
         Dir.glob(File.join(File.expand_path(File.join('..', 'templates', 'app', 'models'), __FILE__), '*')).each do |full_path|
           file = File.basename(full_path, File.extname(full_path))
-          copy_file File.join('app', 'models', "#{file}.rb")
+          copy_file(File.join('app', 'models', "#{file}.rb"))
         end
         Dir.glob(File.join(File.expand_path(File.join('..', 'templates', 'app', 'models', 'geonames'), __FILE__), '*')).each do |full_path|
           file = File.basename(full_path, File.extname(full_path))
