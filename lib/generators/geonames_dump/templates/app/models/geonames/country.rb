@@ -1,4 +1,4 @@
-class GeonamesCountry < ActiveRecord::Base
+class Geonames::Country < ActiveRecord::Base
   validates_uniqueness_of :geonameid
 
   ##

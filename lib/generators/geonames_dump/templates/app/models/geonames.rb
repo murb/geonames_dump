@@ -1,0 +1,2 @@
+module Geonames
+end

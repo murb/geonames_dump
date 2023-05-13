@@ -1,4 +1,4 @@
-class GeonamesAlternateName < ActiveRecord::Base
+class Geonames::AlternateName < ActiveRecord::Base
   validates_uniqueness_of :alternate_name_id
   before_save :set_alternate_name_first_letters
 

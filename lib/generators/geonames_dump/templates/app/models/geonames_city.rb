@@ -1,2 +1,0 @@
-class GeonamesCity < GeonamesFeature
-end
