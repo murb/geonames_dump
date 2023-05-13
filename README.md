@@ -15,7 +15,7 @@ You're free to use [geocoder](https://github.com/alexreisner/geocoder) or
 Add this line to your application's Gemfile:
 
 ```
-gem 'geonames_dump'
+gem "geonames_dump", git: "https://github.com/murb/geonames_dump.git", branch: "develop", require: "Geonames"
 ```
 
 And then execute:

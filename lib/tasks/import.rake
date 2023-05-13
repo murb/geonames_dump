@@ -33,6 +33,8 @@ namespace :geonames do
     desc 'Prepare everything to import data'
     task :prepare do
       Dir::mkdir(CACHE_DIR) rescue nil
+      FileUtils.mkdir_p File.join(CACHE_DIR, 'alternateNames')
+
       disable_logger
       disable_validations if ENV['SKIP_VALIDATION']
     end
@@ -49,9 +51,7 @@ namespace :geonames do
     desc 'Import feature data. Specify Country ISO code (example : COUNTRY=FR) for just a single country. NOTE: This task can take a long time!'
     task :features => [:prepare, :environment] do
       download_file = ENV['COUNTRY'].present? ? ENV['COUNTRY'].upcase : 'allCountries'
-      zip_filename = download_file+'.zip'
-
-      txt_file = get_or_download("http://download.geonames.org/export/dump/#{zip_filename}")
+      txt_file = get_or_download("http://download.geonames.org/export/dump/#{download_file}.zip")
 
       # Import into the database.
       File.open(txt_file) do |f|
@@ -84,13 +84,16 @@ namespace :geonames do
 
     desc 'Import alternate names'
     task :alternate_names => [:prepare, :environment] do
-      txt_file = get_or_download('http://download.geonames.org/export/dump/alternateNames.zip',
-                                 txt_file: 'alternateNames.txt')
+      download_file = ENV['LANG'].present? ? "alternatenames/#{ENV['LANG'].upcase}" : 'alternateNames'
+
+      txt_file = get_or_download("http://download.geonames.org/export/dump/#{download_file}.zip",
+                                 txt_file: "#{download_file}.txt",
+                                 zip_file: "#{download_file}.zip")
 
       File.open(txt_file) do |f|
         insert_data(f,
                     GEONAMES_ALTERNATE_NAMES_COL_NAME,
-                    GeonamesAlternateName,
+                    Geonames::AlternateName,
                     :title => "Alternate names",
                     :buffer => 10000,
                     :primary_key => [:alternate_name_id, :geonameid])
@@ -166,16 +169,17 @@ namespace :geonames do
 
     def get_or_download(url, options = {})
       filename = File.basename(url)
+      cache_dir = url.match(/alternatenames/) ? CACHE_DIR : File.join(CACHE_DIR, 'alternatenames')
       unzip = File.extname(filename) == '.zip'
       txt_filename = unzip ? "#{File.basename(filename, '.zip')}.txt" : filename
-      txt_file_in_cache = File.join(CACHE_DIR, options[:txt_file] || txt_filename)
-      zip_file_in_cache = File.join(CACHE_DIR, filename)
+      txt_file_in_cache = File.join(cache_dir, options[:txt_file] || txt_filename)
+      zip_file_in_cache = File.join(cache_dir, options[:zip_file] || filename)
 
       unless File::exist?(txt_file_in_cache)
         puts "File doesn't exist in cache : #{txt_file_in_cache}"
         if unzip
           download(url, zip_file_in_cache)
-          unzip_file(zip_file_in_cache, CACHE_DIR)
+          unzip_file(zip_file_in_cache, cache_dir)
         else
           download(url, txt_file_in_cache)
         end
