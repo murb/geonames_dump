@@ -27,7 +27,7 @@ module Geonames
         ret = model.search(query)
       end
     rescue NameError => e
-      raise $!, "Unknown type for Geonames, #{$!}", $!.backtrace
+      raise $!, "Unknown type for Geonames, #{$!}, #{e.message}", $!.backtrace
     end
 
 

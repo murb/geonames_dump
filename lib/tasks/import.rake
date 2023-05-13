@@ -5,7 +5,9 @@ require 'geonames'
 
 namespace :geonames do
   namespace :import do
-    CACHE_DIR = Rails.root.join('db', 'geonames_cache')
+    root = defined?(Rails) ? Rails.root : Pathname.new(File.dirname(__FILE__)).join('..', '..')
+
+    CACHE_DIR = root.join('db', 'geonames_cache')
 
     GEONAMES_FEATURES_COL_NAME = [
         :id, :name, :asciiname, :alternatenames, :latitude, :longitude,
@@ -169,7 +171,7 @@ namespace :geonames do
 
     def get_or_download(url, options = {})
       filename = File.basename(url)
-      cache_dir = url.match(/alternatenames/) ? CACHE_DIR : File.join(CACHE_DIR, 'alternatenames')
+      cache_dir = url.match(/alternatenames/) ? CACHE_DIR : File.join(CACHE_DIR, 'alternateNames')
       unzip = File.extname(filename) == '.zip'
       txt_filename = unzip ? "#{File.basename(filename, '.zip')}.txt" : filename
       txt_file_in_cache = File.join(cache_dir, options[:txt_file] || txt_filename)
@@ -187,7 +189,7 @@ namespace :geonames do
         puts "File already exists in cache : #{txt_file_in_cache}"
       end
 
-      ret = (File::exist?(txt_file_in_cache) ? txt_file_in_cache : nil)
+      (File::exist?(txt_file_in_cache) ? txt_file_in_cache : nil)
     end
 
     def unzip_file(file, destination)
