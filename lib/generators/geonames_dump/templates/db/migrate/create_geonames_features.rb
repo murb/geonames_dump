@@ -1,4 +1,4 @@
-class CreateGeonamesFeatures < ActiveRecord::Migration
+class CreateGeonamesFeatures < ActiveRecord::Migration[6.0]
   # http://download.geonames.org/export/dump/readme.txt
   # geonameid         : integer id of record in geonames database
   # name              : name of geographical point (utf8) varchar(200)

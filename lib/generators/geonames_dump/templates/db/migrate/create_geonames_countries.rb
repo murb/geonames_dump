@@ -1,4 +1,4 @@
-class CreateGeonamesCountries < ActiveRecord::Migration
+class CreateGeonamesCountries < ActiveRecord::Migration[6.0]
   # http://download.geonames.org/export/dump/countryInfo.txt
   def change
     create_table :geonames_countries do |t|

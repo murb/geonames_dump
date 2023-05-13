@@ -1,4 +1,4 @@
-class CreateGeonamesIsoLanguagecodes < ActiveRecord::Migration
+class CreateGeonamesIsoLanguagecodes < ActiveRecord::Migration[6.0]
   # http://download.geonames.org/export/dump/iso-languagecodes.txt
   # iso_639_3 : ISO 639-3 language code
   # iso_639_2 : ISO 639-2 language code

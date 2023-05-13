@@ -1,4 +1,4 @@
-class CreateGeonamesAlternateNames < ActiveRecord::Migration
+class CreateGeonamesAlternateNames < ActiveRecord::Migration[6.0]
   # http://download.geonames.org/export/dump/countryInfo.txt
   # alternateNameId   : the id of this alternate name, int
   # geonameid         : geonameId referring to id in table 'geoname', int
