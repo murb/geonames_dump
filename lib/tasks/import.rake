@@ -55,7 +55,7 @@ namespace :geonames_dump do
     end
 
     # geonames:import:citiesNNN where NNN is population size.
-    %w[15000 5000 1000].each do |population|
+    %w[15000 5000 1000 500].each do |population|
       desc "Import cities with population greater than #{population}"
       task "cities#{population}".to_sym => [:prepare, :environment] do
 
