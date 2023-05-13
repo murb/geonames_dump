@@ -6,8 +6,9 @@ class Geonames::Feature < ActiveRecord::Base
 
   has_many :geonames_alternate_names,
     inverse_of: :geonames_feature,
-    primary_key: "geonameid",
-    foreign_key: "geonameid"
+    foreign_key: "geonameid",
+    class_name: "Geonames::AlternateName"
+
   alias_method :alternate_names, :geonames_alternate_names
 
   ##
