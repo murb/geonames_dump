@@ -1,4 +1,4 @@
-module GeonamesDump
+module Geonames
   class Railtie < Rails::Railtie
     # import rake tast into rails application
     rake_tasks do

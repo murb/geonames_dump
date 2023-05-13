@@ -1,8 +1,8 @@
-require "geonames_dump/version"
-require "geonames_dump/blocks"
-require "geonames_dump/railtie" if defined?(Rails)
+require "geonames/version"
+require "geonames/blocks"
+require "geonames/railtie" if defined?(Rails)
 
-module GeonamesDump
+module Geonames
   def self.search(query, options = {})
     ret = nil
 
@@ -20,12 +20,14 @@ module GeonamesDump
         ret = Geonames::Admin2.search(query) if ret.blank?
         # feature
         ret = Geonames::Feature.search(query) if ret.blank?
+        # country
+        ret = Geonames::Country.search(query) if ret.blank?
       else # country, or specific type
-        model = "geonames_#{type.to_s}".camelcase.constantize
+        model = "geonames/#{type.to_s}".camelcase.constantize
         ret = model.search(query)
       end
     rescue NameError => e
-      raise $!, "Unknown type for GeonamesDump, #{$!}", $!.backtrace
+      raise $!, "Unknown type for Geonames, #{$!}", $!.backtrace
     end
 
 

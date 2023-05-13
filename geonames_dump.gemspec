@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/geonames_dump/version', __FILE__)
+require File.expand_path('../lib/geonames/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Alex Pooley", "Thomas Kienlen"]
@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "geonames_dump"
   gem.require_paths = ["lib"]
-  gem.version       = GeonamesDump::VERSION
+  gem.version       = Geonames::VERSION
   gem.add_runtime_dependency 'ruby-progressbar'
   gem.add_runtime_dependency 'activerecord-reset-pk-sequence'
   gem.add_runtime_dependency 'rubyzip', '~>2.3'

@@ -6,8 +6,8 @@ class Geonames::AlternateName < ActiveRecord::Base
 
   belongs_to :geonames_feature,
     :inverse_of => :geonames_alternate_names,
-    :primary_key => 'geonameid',
-    :foreign_key => 'geonameid'
+    :foreign_key => 'geonameid',
+    :class_name => 'Geonames::Feature'
   alias_method :feature, :geonames_feature
 
   ##
@@ -42,7 +42,7 @@ class Geonames::AlternateName < ActiveRecord::Base
   # search by name
   #
   scope :by_alternate_name, lambda { |q|
-    ret = self.scoped
+    ret = self
     ret = ret.where("alternate_name_first_letters = ?", q[0...3].downcase)
     ret = ret.where("alternate_name LIKE ?", "#{q}%")
   }

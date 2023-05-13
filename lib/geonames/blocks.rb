@@ -1,4 +1,4 @@
-module GeonamesDump
+module Geonames
   class Blocks
     attr_accessor :blocks
     def initialize

@@ -2,7 +2,7 @@ require 'net/http'
 require 'ruby-progressbar'
 require 'activerecord-reset-pk-sequence'
 
-namespace :geonames_dump do
+namespace :geonames do
   namespace :truncate do
 
     desc 'Truncate all geonames data.'

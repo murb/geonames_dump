@@ -1,9 +1,9 @@
 require 'net/http'
 require 'ruby-progressbar'
 require 'zip'
-require 'geonames_dump'
+require 'geonames'
 
-namespace :geonames_dump do
+namespace :geonames do
   namespace :import do
     CACHE_DIR = Rails.root.join('db', 'geonames_cache')
 
@@ -222,7 +222,7 @@ namespace :geonames_dump do
       progress_bar = ProgressBar.create(:title => title, :total => file_size, :format => '%a |%b>%i| %p%% %t')
 
       # create block array
-      blocks = GeonamesDump::Blocks.new
+      blocks = Geonames::Blocks.new
       line_counter = 0
 
       file_fd.each_line do |line|

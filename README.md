@@ -35,7 +35,7 @@ gem install geonames_dump
 Create models and migration files
 
 ```
-rails generate geonames_dump:install
+rails generate geonames:install
 ```
 
 Import data (takes a loonnnng time!), it will download data, import countries
@@ -44,36 +44,37 @@ and many features (Countries, Cities having more than 15000 people, Admin1
 subdivision))
 
 ```
-rake geonames_dump:install
+rake geonames:install
 ```
 
 If you need more fine grained control over the installation process you can run
 individual geoname rake tasks instead of the all-in-one install :
 
 ```
-$ rake -T | grep geonames_dump
+$ rake -T | grep geonames
 
-rake geonames_dump:import:all               # Import ALL geonames data.
-rake geonames_dump:import:many              # Import most of geonames data.
+rake geonames:import:all               # Import ALL geonames data.
+rake geonames:import:many              # Import most of geonames data.
 
-rake geonames_dump:import:admin1            # Import admin1 codes
-rake geonames_dump:import:admin2            # Import admin2 codes
-rake geonames_dump:import:cities            # Import all cities, regardless of population.
-rake geonames_dump:import:cities1000        # Import cities with population greater than 1000
-rake geonames_dump:import:cities15000       # Import cities with population greater than 15000
-rake geonames_dump:import:cities5000        # Import cities with population greater than 5000
-rake geonames_dump:import:countries         # Import countries informations
-rake geonames_dump:import:features          # Import feature data.
-rake geonames_dump:import:alternate_names   # Import alternate names
-rake geonames_dump:import:hierarchy         # Import alternate names
+rake geonames:import:admin1            # Import admin1 codes
+rake geonames:import:admin2            # Import admin2 codes
+rake geonames:import:cities            # Import all cities, regardless of population.
+rake geonames:import:cities1000        # Import cities with population greater than 1000
+rake geonames:import:cities15000       # Import cities with population greater than 15000
+rake geonames:import:cities500        # Import cities with population greater than 1000
+rake geonames:import:cities5000        # Import cities with population greater than 5000
+rake geonames:import:countries         # Import countries informations
+rake geonames:import:features          # Import feature data.
+rake geonames:import:alternate_names   # Import alternate names
+rake geonames:import:hierarchy         # Import alternate names
 
-rake geonames_dump:truncate:all             # Truncate all geonames data.
-rake geonames_dump:truncate:countries       # Truncate countries informations
-rake geonames_dump:truncate:admin1          # Truncate admin1 codes
-rake geonames_dump:truncate:admin2          # Truncate admin2 codes
-rake geonames_dump:truncate:cities          # Truncate cities informations
-rake geonames_dump:truncate:features        # Truncate features informations
-rake geonames_dump:truncate:alternate_names # Import alternate names
+rake geonames:truncate:all             # Truncate all geonames data.
+rake geonames:truncate:countries       # Truncate countries informations
+rake geonames:truncate:admin1          # Truncate admin1 codes
+rake geonames:truncate:admin2          # Truncate admin2 codes
+rake geonames:truncate:cities          # Truncate cities informations
+rake geonames:truncate:features        # Truncate features informations
+rake geonames:truncate:alternate_names # Import alternate names
 ```
 
 ## Geonames data usage
@@ -82,8 +83,8 @@ The above commands will import geonames data in your Rails application, in
 other words, this will create models and fill database with place/city/country
 informations.
 
-A convenient way to search for data is to use GeonamesDump search accessor
-`GeonamesDump.search`. This method interate on data types to find a result.
+A convenient way to search for data is to use Geonames search accessor
+`Geonames.search`. This method interate on data types to find a result.
 Search order is the following :
 
 1. Cities
@@ -95,33 +96,33 @@ Search order is the following :
 Now to find a city for example :
 
 ```
-GeonamesDump.search('paris')
-GeonamesDump.search('東京') # tokyo :-)
+Geonames.search('paris')
+Geonames.search('東京') # tokyo :-)
 ```
 
 If your request is ambiguous, like not searching Dublin in Ireland but Dublin
 in the USA, you may specify country :
 
 ```
-GeonamesDump.search('dublin').first.country_code
+Geonames.search('dublin').first.country_code
 => 'IE'
-GeonamesDump.search('dublin, us').first.country_code
+Geonames.search('dublin, us').first.country_code
 => 'US'
 ```
 
 If needed, requested type may be specified too :
 
 ```
-GeonamesDump.search('dublin', type: :city)
-GeonamesDump.search('dublin, us', type: :city)
-GeonamesDump.search('paris', type: :feature)
+Geonames.search('dublin', type: :city)
+Geonames.search('dublin, us', type: :city)
+Geonames.search('paris', type: :feature)
 ```
 
-As `GeonamesDump.search` is returning `Feature` objects by default, type should
+As `Geonames.search` is returning `Feature` objects by default, type should
 specified to search for Countries :
 
 ```
-GeonamesDump.search('Ireland', type: :country)
+Geonames.search('Ireland', type: :country)
 ```
 
 The following types are available :
