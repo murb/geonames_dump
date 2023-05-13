@@ -1,4 +1,6 @@
 class Geonames::Country < ActiveRecord::Base
+  self.table_name= "geonames_countries"
+
   validates_uniqueness_of :geonameid
 
   ##

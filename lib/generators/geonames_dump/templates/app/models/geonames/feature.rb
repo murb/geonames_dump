@@ -1,4 +1,6 @@
 class Geonames::Feature < ActiveRecord::Base
+  self.table_name= "geonames_features"
+
   #validates_uniqueness_of :geonameid
   before_save :set_asciiname_first_letters
 
