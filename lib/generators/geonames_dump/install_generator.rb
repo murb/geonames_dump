@@ -27,6 +27,11 @@ DESC
           file = File.basename(full_path, File.extname(full_path))
           copy_file File.join('app', 'models', "#{file}.rb")
         end
+        Dir.glob(File.join(File.expand_path(File.join('..', 'templates', 'app', 'models', 'geonames'), __FILE__), '*')).each do |full_path|
+          file = File.basename(full_path, File.extname(full_path))
+          FileUtils.mkdir_p File.join('app', 'models', 'geonames')
+          copy_file File.join('app', 'models', 'geonames', "#{file}.rb")
+        end
       end
 
       def self.next_migration_number(path)
