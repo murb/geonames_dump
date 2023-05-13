@@ -38,7 +38,7 @@ namespace :geonames do
       rescue
         nil
       end
-      FileUtils.mkdir_p File.join(CACHE_DIR, "alternatenames")
+      FileUtils.mkdir_p File.join(CACHE_DIR, "alternateNames")
 
       disable_logger
       disable_validations if ENV["SKIP_VALIDATION"]
@@ -89,7 +89,6 @@ namespace :geonames do
     desc "Import alternate names"
     task alternate_names: [:prepare, :environment] do
       download_file = ENV["ALTERNATE_NAMES_LANG"].present? ? "alternatenames/#{ENV["ALTERNATE_NAMES_LANG"].upcase}" : "alternateNames"
-
       txt_file = get_or_download("http://download.geonames.org/export/dump/#{download_file}.zip",
         txt_file: "#{download_file}.txt",
         zip_file: "#{download_file}.zip")
@@ -176,11 +175,11 @@ namespace :geonames do
 
     def get_or_download(url, options = {})
       filename = File.basename(url)
-      cache_dir = /alternatenames/.match?(url) ? CACHE_DIR : File.join(CACHE_DIR, "alternatenames")
+      cache_dir = /alternatenames/.match?(url) ? File.join(CACHE_DIR, "alternateNames") : CACHE_DIR
       unzip = File.extname(filename) == ".zip"
       txt_filename = unzip ? "#{File.basename(filename, ".zip")}.txt" : filename
-      txt_file_in_cache = File.join(cache_dir, options[:txt_file] || txt_filename)
-      zip_file_in_cache = File.join(cache_dir, options[:zip_file] || filename)
+      txt_file_in_cache = File.join(CACHE_DIR, options[:txt_file] || txt_filename)
+      zip_file_in_cache = File.join(CACHE_DIR, options[:zip_file] || filename)
 
       if File.exist?(txt_file_in_cache)
         puts "File already exists in cache : #{txt_file_in_cache}"
