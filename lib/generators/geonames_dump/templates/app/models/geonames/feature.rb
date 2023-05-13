@@ -24,7 +24,7 @@ class Geonames::Feature < ActiveRecord::Base
     ret = by_name(*queries)
 
     unless country.nil?
-      geonames_country = GeonamesCountry.search(country).first
+      geonames_country = Geonames::Country.search(country).first
       ret = ret.where(:country_code => geonames_country.iso) unless geonames_country.nil?
     end
 

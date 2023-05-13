@@ -11,15 +11,15 @@ module GeonamesDump
       case type
       when :auto # return an array of features
         # city name
-        ret = GeonamesCity.search(query)
+        ret = Geonames::City.search(query)
         # alternate name
-        ret = GeonamesAlternateName.search(query).map { |alternate| alternate.feature }.compact  if ret.blank?
+        ret = Geonames::AlternateName.search(query).map { |alternate| alternate.feature }.compact  if ret.blank?
         # admin1
-        ret = GeonamesAdmin1.search(query) if ret.blank?
+        ret = Geonames::Admin1.search(query) if ret.blank?
         # admin2
-        ret = GeonamesAdmin2.search(query) if ret.blank?
+        ret = Geonames::Admin2.search(query) if ret.blank?
         # feature
-        ret = GeonamesFeature.search(query) if ret.blank?
+        ret = Geonames::Feature.search(query) if ret.blank?
       else # country, or specific type
         model = "geonames_#{type.to_s}".camelcase.constantize
         ret = model.search(query)

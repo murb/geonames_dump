@@ -8,4 +8,3 @@ module GeonamesDump
     end
   end
 end
-

@@ -33,7 +33,7 @@ class Geonames::AlternateName < ActiveRecord::Base
   # search by name for available features
   #
   scope :by_alternate_name_featured, lambda { |q|
-    joins(:geonames_feature).by_alternate_name(q).where(GeonamesFeature.arel_table[:id].not_eq(nil))
+    joins(:geonames_feature).by_alternate_name(q).where(Geonames::Feature.arel_table[:id].not_eq(nil))
   }
 
   ##
