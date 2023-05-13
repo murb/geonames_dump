@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency "rubyzip", "~>2.3"
   gem.add_development_dependency "minitest", "~>5.0"
   gem.add_development_dependency "rake", ">10.0"
+  gem.add_development_dependency "standardrb", "~>1.0"
 end

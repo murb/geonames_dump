@@ -38,7 +38,6 @@ class Geonames::Feature < ActiveRecord::Base
   #
   scope :by_name, lambda { |*queries|
     ret = self
-    count = queries.count
     queries.collect.with_index do |q, idx|
       query = (idx == 0) ? q.to_s : "%#{q}%"
       ret = ret.where("asciiname_first_letters = ?", q[0...3].downcase)

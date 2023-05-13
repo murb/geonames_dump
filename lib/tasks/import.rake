@@ -3,35 +3,34 @@ require "ruby-progressbar"
 require "zip"
 require "geonames"
 
+root = defined?(Rails) ? Rails.root : Pathname.new(File.dirname(__FILE__)).join("..", "..")
+CACHE_DIR = root.join("db", "geonames_cache")
+
+GEONAMES_FEATURES_COL_NAME = [
+  :id, :name, :asciiname, :alternatenames, :latitude, :longitude,
+  :feature_class, :feature_code, :country_code, :cc2, :admin1_code,
+  :admin2_code, :admin3_code, :admin4_code, :population, :elevation,
+  :dem, :timezone, :modification
+]
+GEONAMES_ALTERNATE_NAMES_COL_NAME = [
+  :alternate_name_id, :geonameid, :isolanguage, :alternate_name,
+  :is_preferred_name, :is_short_name, :is_colloquial, :is_historic
+]
+GEONAMES_COUNTRIES_COL_NAME = [
+  :iso, :iso3, :iso_numeric, :fips, :country, :capital, :area, :population, :continent,
+  :tld, :currency_code, :currency_name, :phone, :postal_code_format, :postal_code_regex,
+  :languages, :geonameid, :neighbours, :equivalent_fips_code
+]
+GEONAMES_ADMINS_COL_NAME = [
+  :code, :name, :asciiname, :id
+]
+
+GEONAMES_HIERARCHY = [
+  :parentId, :childId, :geo_type
+]
+
 namespace :geonames do
   namespace :import do
-    root = defined?(Rails) ? Rails.root : Pathname.new(File.dirname(__FILE__)).join("..", "..")
-
-    CACHE_DIR = root.join("db", "geonames_cache")
-
-    GEONAMES_FEATURES_COL_NAME = [
-      :id, :name, :asciiname, :alternatenames, :latitude, :longitude,
-      :feature_class, :feature_code, :country_code, :cc2, :admin1_code,
-      :admin2_code, :admin3_code, :admin4_code, :population, :elevation,
-      :dem, :timezone, :modification
-    ]
-    GEONAMES_ALTERNATE_NAMES_COL_NAME = [
-      :alternate_name_id, :geonameid, :isolanguage, :alternate_name,
-      :is_preferred_name, :is_short_name, :is_colloquial, :is_historic
-    ]
-    GEONAMES_COUNTRIES_COL_NAME = [
-      :iso, :iso3, :iso_numeric, :fips, :country, :capital, :area, :population, :continent,
-      :tld, :currency_code, :currency_name, :phone, :postal_code_format, :postal_code_regex,
-      :languages, :geonameid, :neighbours, :equivalent_fips_code
-    ]
-    GEONAMES_ADMINS_COL_NAME = [
-      :code, :name, :asciiname, :id
-    ]
-
-    GEONAMES_HIERARCHY = [
-      :parentId, :childId, :geo_type
-    ]
-
     desc "Prepare everything to import data"
     task :prepare do
       begin
@@ -268,7 +267,7 @@ namespace :geonames do
           primary_keys = primary_key.is_a?(Array) ? primary_key : [primary_key]
           if primary_keys.all? { |key| attributes.include?(key) }
             if ENV["QUICK"]
-              object = klass.create(attributes)
+              klass.create(attributes)
             else
               where_condition = {}
               primary_keys.each do |key|

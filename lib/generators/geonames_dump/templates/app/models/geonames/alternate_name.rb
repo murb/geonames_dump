@@ -44,7 +44,7 @@ class Geonames::AlternateName < ActiveRecord::Base
   scope :by_alternate_name, lambda { |q|
     ret = self
     ret = ret.where("alternate_name_first_letters = ?", q[0...3].downcase)
-    ret = ret.where("alternate_name LIKE ?", "#{q}%")
+    ret.where("alternate_name LIKE ?", "#{q}%")
   }
 
   protected
