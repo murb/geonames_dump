@@ -1,6 +1,7 @@
 require "minitest/autorun"
 require "rake"
 require 'fileutils'
+require 'logger'
 
 load File.join(File.dirname(__FILE__), "/mock_rails_tasks.rake")
 Dir[File.join(File.dirname(__FILE__),'../../../lib/tasks/*.rake')].each { |f| load f }
