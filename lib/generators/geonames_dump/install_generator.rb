@@ -1,4 +1,3 @@
-require 'pry'
 module GeonamesDump
   module Generators
     class InstallGenerator < Rails::Generators::Base
