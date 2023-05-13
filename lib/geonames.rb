@@ -13,7 +13,7 @@ module Geonames
         # city name
         ret = Geonames::City.search(query)
         # alternate name
-        ret = Geonames::AlternateName.search(query).map { |alternate| alternate.feature }.compact  if ret.blank?
+        ret = Geonames::AlternateName.search(query).map { |alternate| alternate.feature }.compact if ret.blank?
         # admin1
         ret = Geonames::Admin1.search(query) if ret.blank?
         # admin2
@@ -23,13 +23,12 @@ module Geonames
         # country
         ret = Geonames::Country.search(query) if ret.blank?
       else # country, or specific type
-        model = "geonames/#{type.to_s}".camelcase.constantize
+        model = "geonames/#{type}".camelcase.constantize
         ret = model.search(query)
       end
     rescue NameError => e
       raise $!, "Unknown type for Geonames, #{$!}, #{e.message}", $!.backtrace
     end
-
 
     ret
   end

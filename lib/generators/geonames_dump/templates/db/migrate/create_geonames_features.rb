@@ -21,7 +21,7 @@ class CreateGeonamesFeatures < ActiveRecord::Migration[6.0]
   # modification date : date of last modification in yyyy-MM-dd format
   def change
     create_table :geonames_features do |t|
-      #t.integer :geonameid
+      # t.integer :geonameid
       t.string :name, length: 200
       t.string :asciiname, length: 200
       t.text :alternatenames, length: 5000
@@ -48,7 +48,7 @@ class CreateGeonamesFeatures < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    #add_index :geonames_features, :geonameid
+    # add_index :geonames_features, :geonameid
     add_index :geonames_features, :name, length: 20
     add_index :geonames_features, :asciiname, length: 20
     add_index :geonames_features, :country_code, length: 20

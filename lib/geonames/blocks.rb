@@ -10,7 +10,7 @@ module Geonames
     end
 
     def add_block(&block)
-      self.blocks << block
+      blocks << block
     end
 
     def empty?

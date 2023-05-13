@@ -1,13 +1,13 @@
 class Geonames::AlternateName < ActiveRecord::Base
-  self.table_name= "geonames_alternate_names"
+  self.table_name = "geonames_alternate_names"
 
   validates_uniqueness_of :alternate_name_id
   before_save :set_alternate_name_first_letters
 
   belongs_to :geonames_feature,
-    :inverse_of => :geonames_alternate_names,
-    :foreign_key => 'geonameid',
-    :class_name => 'Geonames::Feature'
+    inverse_of: :geonames_alternate_names,
+    foreign_key: "geonameid",
+    class_name: "Geonames::Feature"
   alias_method :feature, :geonames_feature
 
   ##
@@ -53,7 +53,6 @@ class Geonames::AlternateName < ActiveRecord::Base
   # Set first letters of name into index column
   #
   def set_alternate_name_first_letters
-    self.alternate_name_first_letters = self.alternate_name[0...3].downcase unless self.alternate_name.nil?
+    self.alternate_name_first_letters = alternate_name[0...3].downcase unless alternate_name.nil?
   end
-
 end

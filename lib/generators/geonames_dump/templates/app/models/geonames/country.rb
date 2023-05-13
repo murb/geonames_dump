@@ -1,5 +1,5 @@
 class Geonames::Country < ActiveRecord::Base
-  self.table_name= "geonames_countries"
+  self.table_name = "geonames_countries"
 
   validates_uniqueness_of :geonameid
 
@@ -7,7 +7,7 @@ class Geonames::Country < ActiveRecord::Base
   # search by iso first, then by name if not found
   #
   scope :search, lambda { |q|
-    by_iso(q).count > 0 ? by_iso(q) : by_name(q)
+    (by_iso(q).count > 0) ? by_iso(q) : by_name(q)
   }
 
   ##
@@ -23,5 +23,4 @@ class Geonames::Country < ActiveRecord::Base
   scope :by_name, lambda { |q|
     where("country LIKE ?", "#{q}%")
   }
-
 end
