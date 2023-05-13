@@ -88,7 +88,7 @@ namespace :geonames do
 
     desc "Import alternate names"
     task alternate_names: [:prepare, :environment] do
-      download_file = ENV["LANG"].present? ? "alternatenames/#{ENV["LANG"].upcase}" : "alternateNames"
+      download_file = ENV["ALTERNATE_NAMES_LANG"].present? ? "alternatenames/#{ENV["ALTERNATE_NAMES_LANG"].upcase}" : "alternateNames"
 
       txt_file = get_or_download("http://download.geonames.org/export/dump/#{download_file}.zip",
         txt_file: "#{download_file}.txt",

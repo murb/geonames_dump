@@ -31,6 +31,7 @@ class Geonames::City
 end
 
 class FakeResponse
+  UnexpectedRequest = Class.new(StandardError)
   def initialize(file)
     @file = file
   end
@@ -39,7 +40,17 @@ class FakeResponse
     File.binread(@file)
   end
 
+  def expect_path url
+    @expect_path = url
+  end
+
   def request url
+    if @expect_path
+      if @expect_path.to_s != url.path
+        UnexpectedRequest.new("#{@expect_path.to_s} != #{url.path}")
+      end
+    end
+
   end
 end
 
@@ -70,6 +81,20 @@ describe "rake geonames:import" do
       Net::HTTP.stub(:start, stubbed_response, stubbed_response) do
         Rake::Task["geonames:import:cities15000"].invoke
       end
+    end
+  end
+
+  describe ":alternate_names" do
+    it "should download alternateNames.zip by default" do
+      Rake::Task["geonames:import:prepare"].invoke
+
+      stubbed_response = FakeResponse.new(File.join(File.dirname(__FILE__), "../../fixtures", "cities15000.zip"))
+      stubbed_response.expect_path("/export/dump/alternateNames.zip")
+
+      Net::HTTP.stub(:start, stubbed_response, stubbed_response) do
+        Rake::Task["geonames:import:alternate_names"].invoke
+      end
+
     end
   end
 end
