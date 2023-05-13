@@ -19,32 +19,32 @@ namespace :geonames_dump do
 
     desc 'Truncate admin1 codes'
     task :admin1 => :environment do
-      truncate_table(GeonamesAdmin1)
+      truncate_table(Geonames::Admin1)
     end
 
     desc 'Truncate admin2 codes'
     task :admin2 => :environment do
-      truncate_table(GeonamesAdmin2)
+      truncate_table(Geonames::Admin2)
     end
 
     desc 'Truncate cities informations'
     task :cities => :environment do
-      truncate_table(GeonamesCity)
+      truncate_table(Geonames::City)
     end
 
     desc 'Truncate countries informations'
     task :countries => :environment do
-      truncate_table(GeonamesCountry)
+      truncate_table(Geonames::Country)
     end
 
     desc 'Truncate features informations'
     task :features => :environment do
-      truncate_table(GeonamesFeature)
+      truncate_table(Geonames::Feature)
     end
 
     desc 'Truncate alternate names'
     task :alternate_names => :environment do
-      truncate_table(GeonamesAlternateName)
+      truncate_table(Geonames::AlternateName)
     end
   end
 end
