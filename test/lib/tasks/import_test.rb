@@ -7,6 +7,9 @@ load File.join(File.dirname(__FILE__), "/mock_rails_tasks.rake")
 Dir[File.join(File.dirname(__FILE__), "../../../lib/tasks/*.rake")].each { |f| load f }
 
 root = Pathname.new(File.dirname(__FILE__)).join("..", "..", "..")
+
+puts "test root: #{root}"
+
 FileUtils.rm_rf(File.join(root, "db"))
 
 # from https://gist.github.com/jazzytomato/79bb6ff516d93486df4e14169f4426af

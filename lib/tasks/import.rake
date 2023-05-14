@@ -4,6 +4,7 @@ require "zip"
 require "geonames"
 
 root = defined?(Rails) ? Rails.root : Pathname.new(File.dirname(__FILE__)).join("..", "..")
+puts "import root: #{root}"
 CACHE_DIR = root.join("db", "geonames_cache")
 
 GEONAMES_FEATURES_COL_NAME = [
@@ -38,7 +39,7 @@ namespace :geonames do
       rescue
         nil
       end
-      FileUtils.mkdir_p File.join(CACHE_DIR, "alternateNames")
+      FileUtils.mkdir_p File.join(CACHE_DIR, "alternatenames")
 
       disable_logger
       disable_validations if ENV["SKIP_VALIDATION"]
@@ -175,7 +176,7 @@ namespace :geonames do
 
     def get_or_download(url, options = {})
       filename = File.basename(url)
-      cache_dir = /alternatenames/.match?(url) ? File.join(CACHE_DIR, "alternateNames") : CACHE_DIR
+      cache_dir = /alternatenames/.match?(url) ? File.join(CACHE_DIR, "alternatenames") : CACHE_DIR
       unzip = File.extname(filename) == ".zip"
       txt_filename = unzip ? "#{File.basename(filename, ".zip")}.txt" : filename
       txt_file_in_cache = File.join(CACHE_DIR, options[:txt_file] || txt_filename)
