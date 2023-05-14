@@ -29,13 +29,10 @@ end
 # mock ActiveRecord
 class ActiveRecord::Base
   class << self
-    def logger= something
-    end
+    attr_accessor :transaction
+    attr_accessor :logger
 
     def reset_callbacks param
-    end
-
-    def transaction
     end
   end
 end
@@ -51,16 +48,14 @@ end
 
 class FakeResponse
   UnexpectedRequest = Class.new(StandardError)
+  attr_accessor :expect_path
+
   def initialize(file)
     @file = file
   end
 
   def body
     File.binread(@file)
-  end
-
-  def expect_path url
-    @expect_path = url
   end
 
   def request url
@@ -107,7 +102,7 @@ describe "rake geonames:import" do
       Rake::Task["geonames:import:prepare"].invoke
 
       stubbed_response = FakeResponse.new(File.join(File.dirname(__FILE__), "../../fixtures", "alternateNames.zip"))
-      stubbed_response.expect_path("/export/dump/alternateNames.zip")
+      stubbed_response.expect_path = "/export/dump/alternateNames.zip"
       Minitest::Test.io_lock.synchronize do
         Net::HTTP.stub(:start, stubbed_response, stubbed_response) do
           mock_env "ALTERNATE_NAMES_LANG" => nil do
@@ -120,7 +115,7 @@ describe "rake geonames:import" do
     it "should download localized alternateNames" do
       Rake::Task["geonames:import:prepare"].invoke
       stubbed_response = FakeResponse.new(File.join(File.dirname(__FILE__), "../../fixtures", "alternatenames/NL.zip"))
-      stubbed_response.expect_path("/export/dump/alternatenames/NL.zip")
+      stubbed_response.expect_path = "/export/dump/alternatenames/NL.zip"
 
       Minitest::Test.io_lock.synchronize do
         Net::HTTP.stub(:start, stubbed_response, stubbed_response) do
@@ -137,7 +132,7 @@ describe "rake geonames:import" do
       Rake::Task["geonames:import:prepare"].invoke
 
       stubbed_response = FakeResponse.new(File.join(File.dirname(__FILE__), "../../fixtures", "alternateNames.zip"))
-      stubbed_response.expect_path("/export/dump/alternateNames.zip")
+      stubbed_response.expect_path = "/export/dump/alternateNames.zip"
       Minitest::Test.io_lock.synchronize do
         Net::HTTP.stub(:start, stubbed_response, stubbed_response) do
           mock_env "ALTERNATE_NAMES_LANG" => nil do

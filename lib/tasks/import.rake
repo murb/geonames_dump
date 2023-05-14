@@ -55,7 +55,7 @@ namespace :geonames do
 
     desc "Import feature data. Specify Country ISO code (example : COUNTRY=FR) for just a single country. NOTE: This task can take a long time!"
     task features: [:prepare, :environment] do
-      download_file = ENV["COUNTRY"].present? ? ENV["COUNTRY"].upcase : "allCountries"
+      download_file = ENV["COUNTRY"] ? ENV["COUNTRY"].upcase : "allCountries"
       txt_file = get_or_download("http://download.geonames.org/export/dump/#{download_file}.zip")
 
       # Import into the database.
@@ -88,7 +88,7 @@ namespace :geonames do
 
     desc "Import alternate names"
     task alternate_names: [:prepare, :environment] do
-      download_file = ENV["ALTERNATE_NAMES_LANG"].present? ? "alternatenames/#{ENV["ALTERNATE_NAMES_LANG"].upcase}" : "alternateNames"
+      download_file = ENV["ALTERNATE_NAMES_LANG"] ? "alternatenames/#{ENV["ALTERNATE_NAMES_LANG"].upcase}" : "alternateNames"
       txt_file = get_or_download("http://download.geonames.org/export/dump/#{download_file}.zip",
         txt_file: "#{download_file}.txt",
         zip_file: "#{download_file}.zip")
