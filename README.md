@@ -30,6 +30,14 @@ Or install it yourself as:
 gem install geonames_dump
 ```
 
+To speed up imports with > 10x add the active-import gem:
+
+```
+gem 'activerecord-import'
+```
+
+(this gem will add `#bulk_import` to all AR classes; so make sure that works, otherwise it will go with the traditional flow)
+
 ## Usage
 
 Create models and migration files
@@ -66,7 +74,7 @@ rake geonames:import:cities5000        # Import cities with population greater t
 rake geonames:import:countries         # Import countries informations
 rake geonames:import:features          # Import feature data.
 rake geonames:import:alternate_names   # Import alternate names
-rake geonames:import:hierarchy         # Import alternate names
+rake geonames:import:hierarchy         # Import hierarchies
 
 rake geonames:truncate:all             # Truncate all geonames data.
 rake geonames:truncate:countries       # Truncate countries informations
@@ -76,6 +84,17 @@ rake geonames:truncate:cities          # Truncate cities informations
 rake geonames:truncate:features        # Truncate features informations
 rake geonames:truncate:alternate_names # Import alternate names
 ```
+
+### Environment variables
+
+* `IMPORT_STYLE=traditional` will enforce the traditional import; resulting in many creates
+* `IMPORT_STYLE=quick` will enforce the traditional 'quick' import; still resulting in many creates; but not checking for existence
+* `ALTERNATE_NAMES_LANG=<langcode>` will enforce alternate names to be selected for the given language
+* `COUNTRY=<countrycode>` will download all features and alternate names for a given country
+
+For example, to have a high resolution import on a single country, but global names for the rest of the world, use:
+
+COUNTRY=nl ALTERNATE_NAMES_LANG=nl rails geonames:import:all
 
 ## Geonames data usage
 
@@ -88,10 +107,10 @@ A convenient way to search for data is to use Geonames search accessor
 Search order is the following :
 
 1. Cities
-2. Alternate names (names in non-latin alphabets)
+2. Alternate names (localised names)
 3. First level admin subdivisions
 4. Second level admin subdivisions
-5. Features (lakes, mountains and others various features)
+5. (other) Features (lakes, mountains and others various features)
 
 Now to find a city for example :
 

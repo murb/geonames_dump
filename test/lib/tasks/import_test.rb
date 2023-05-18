@@ -31,11 +31,49 @@ end
 
 # mock ActiveRecord
 class ActiveRecord::Base
+  def new_record?
+    true
+  end
+
+  def initialize options = {}
+    @attributes = options
+  end
+
+  def update options = {}
+  end
+
+  def save
+    true
+  end
+
   class << self
-    attr_accessor :transaction
+    # attr_accessor :transaction
     attr_accessor :logger
 
     def reset_callbacks param
+    end
+
+    def bulk_import *args
+    end
+
+    def transaction &block
+      block.call
+    end
+
+    def where options
+      self
+    end
+
+    def create options
+      new(options).save
+    end
+
+    def first_or_initialize options = {}
+      new(options)
+    end
+
+    def column_names
+      [:id]
     end
   end
 end
@@ -47,6 +85,9 @@ class Geonames::AlternateName < ActiveRecord::Base
 end
 
 class Geonames::Country < ActiveRecord::Base
+end
+
+class Geonames::Feature < ActiveRecord::Base
 end
 
 class FakeResponse
@@ -98,6 +139,16 @@ describe "rake geonames:import" do
         Rake::Task["geonames:import:cities15000"].invoke
       end
     end
+
+    it "should import" do
+      stubbed_response = FakeResponse.new(File.join(File.dirname(__FILE__), "../../fixtures", "cities15000.zip"))
+
+      Net::HTTP.stub(:start, stubbed_response, stubbed_response) do
+        mock_env "IMPORT" => "yessir" do
+          Rake::Task["geonames:import:cities15000"].invoke
+        end
+      end
+    end
   end
 
   describe ":alternate_names" do
@@ -115,14 +166,14 @@ describe "rake geonames:import" do
       end
     end
 
-    it "should download localized alternateNames" do
+    it "should download local alternateNames" do
       Rake::Task["geonames:import:prepare"].invoke
       stubbed_response = FakeResponse.new(File.join(File.dirname(__FILE__), "../../fixtures", "alternatenames/NL.zip"))
       stubbed_response.expect_path = "/export/dump/alternatenames/NL.zip"
 
       Minitest::Test.io_lock.synchronize do
         Net::HTTP.stub(:start, stubbed_response, stubbed_response) do
-          mock_env "ALTERNATE_NAMES_LANG" => "NL" do
+          mock_env "COUNTRY" => "NL" do
             Rake::Task["geonames:import:alternate_names"].invoke
           end
         end

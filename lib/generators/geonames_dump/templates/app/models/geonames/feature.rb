@@ -9,6 +9,16 @@ class Geonames::Feature < ActiveRecord::Base
     foreign_key: "geonameid",
     class_name: "Geonames::AlternateName"
 
+  belongs_to :geonames_country,
+    foreign_key: "country_code",
+    class_name: "Geonames::Country",
+    primary_key: "iso"
+
+  belongs_to :geonames_admin1,
+    foreign_key: "admin1_code",
+    class_name: "Geonames::Admin1",
+    primary_key: "code"
+
   alias_method :alternate_names, :geonames_alternate_names
 
   ##
