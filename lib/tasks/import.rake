@@ -126,21 +126,8 @@ namespace :geonames do
       txt_file = get_or_download("http://download.geonames.org/export/dump/admin1CodesASCII.txt")
 
       File.open(txt_file) do |f|
-        attributes = prepare_attributes(f, GEONAMES_ADMINS_COL_NAME) do |klass, attributes, col_value, idx|
-          col_value.gsub!("(general)", "")
-          col_value.strip!
-          if idx == 0
-            country, admin1 = col_value.split(".")
-            attributes[:country_code] = country.strip
-            attributes[:admin1_code] = begin
-              admin1.strip
-            rescue
-              nil
-            end
-          else
-            attributes[GEONAMES_ADMINS_COL_NAME[idx]] = col_value
-          end
-        end
+        attributes = prepare_attributes(f, GEONAMES_ADMINS_COL_NAME, Geonames::Admin)
+        attributes = attributes.delete_if { |a| !a[:code] }.map { |a| Geonames::Admin1.new(a) }.map(&:attributes)
 
         import_or_insert_data(attributes, Geonames::Admin1, {title: "Admin1 subdivisions", primary_key: :id})
       end
@@ -151,17 +138,8 @@ namespace :geonames do
       txt_file = get_or_download("http://download.geonames.org/export/dump/admin2Codes.txt")
 
       File.open(txt_file) do |f|
-        attributes = prepare_attributes(f, GEONAMES_ADMINS_COL_NAME) do |klass, attributes, col_value, idx|
-          col_value.gsub!("(general)", "")
-          if idx == 0
-            country, admin1, admin2 = col_value.split(".")
-            attributes[:country_code] = country.strip
-            attributes[:admin1_code] = admin1.strip # rescue nil
-            attributes[:admin2_code] = admin2.strip # rescue nil
-          else
-            attributes[GEONAMES_ADMINS_COL_NAME[idx]] = col_value
-          end
-        end
+        attributes = prepare_attributes(f, GEONAMES_ADMINS_COL_NAME, Geonames::Admin)
+        attributes = attributes.delete_if { |a| !a[:code] }.map { |a| Geonames::Admin2.new(a) }.map(&:attributes)
 
         import_or_insert_data(attributes, Geonames::Admin2, {title: "Admin2 subdivisions", primary_key: :id})
       end
@@ -245,13 +223,13 @@ namespace :geonames do
       res.body
     end
 
-    def prepare_attributes(file_fd, col_names, klass = Geonames::Feature, &block)
+    def prepare_attributes(file_fd, col_names, klass = Geonames::Feature)
       klass_columns = klass.column_names.map(&:to_sym)
       attributes = file_fd.each_line.map do |line|
         # prepare data
         attributes = {}
 
-        (block ? (col_names && klass_columns) : col_names).each { |col| attributes[col] = nil } # make sure that all columns are present
+        col_names.each { |col| attributes[col] = nil } # make sure that all columns are present
 
         # skip comments
         next if line.start_with?("#")
@@ -260,15 +238,8 @@ namespace :geonames do
         line.strip.split("\t").each_with_index do |col_value, idx|
           col = col_names[idx]
 
-          # skip leading and trailing whitespace
-          col_value.strip!
-
           # block may change the type of object to create
-          if block
-            yield klass, attributes, col_value, idx
-          else
-            attributes[col] = col_value
-          end
+          attributes[col] = col_value.strip
         end
 
         next if ENV["ALTERNATE_NAMES_LANG"] && attributes[:isolanguage] && attributes[:isolanguage] != ENV["ALTERNATE_NAMES_LANG"].downcase

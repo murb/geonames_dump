@@ -1,2 +1,2 @@
-class Geonames::Admin1 < Geonames::Feature
+class Geonames::Admin1 < Geonames::Admin
 end
